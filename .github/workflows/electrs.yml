@@ -22,7 +22,7 @@ jobs:
         with:
           filters: |
             path-filter:
-              - './!((doc|infrastructure|)/**)'
+              - './!((doc)/**)'
 
   build-publish-electrs-initcontainer:
     needs: detect-changes
