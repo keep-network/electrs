@@ -2,7 +2,9 @@ const fs = require('fs')
 const toml = require("toml")
 const tomlify = require("tomlify-j0.4")
 
-const bcoinUrl = process.env.BITCOIN_URL
+const rpcAddress = process.env.DAEMON_RPC_ADDR
+const rpcUser = process.env.DAEMON_RPC_USER
+const rpcPassword = process.env.DAEMON_RPC_PASS
 const jsonRpcImport = process.env.JSON_RPC_IMPORT
 const dbDir = process.env.DB_DIR
 const network = process.env.NETWORK
@@ -24,15 +26,9 @@ async function createElectrsConfig() {
         fs.readFileSync("/tmp/electrs-config.toml", "utf8")
     )
 
-    // Bitcoin url has the following format: `http(s)://username:password@address`
-    // Find position of `@` to extract `auth`(`username:password`) and `address`
-    const doubleSlash = "//"
-    const passwordStartIdx = bcoinUrl.indexOf(doubleSlash) + doubleSlash.length
-    const atIdx = bcoinUrl.indexOf("@", passwordStartIdx)
-
     configFile.jsonrpc_import = (jsonRpcImport.toLowerCase() === 'true')
-    configFile.auth = bcoinUrl.substring(passwordStartIdx, atIdx)
-    configFile.daemon_rpc_addr = bcoinUrl.substring(atIdx+1)
+    configFile.auth = `${rpcUser}:${rpcPassword}`
+    configFile.daemon_rpc_addr = rpcAddress
     configFile.db_dir = dbDir
     configFile.network = network
     configFile.electrum_rpc_addr = electrumRpcAddress

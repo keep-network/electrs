@@ -40,11 +40,21 @@ spec:
           image: gcr.io/keep-test-f3e0/initcontainer-provision-electrs:latest
           imagePullPolicy: Always
           env:
-            - name: BITCOIN_URL
+            - name: DAEMON_RPC_ADDR
+              valueFrom:
+                configMapKeyRef:
+                  name: bitcoind
+                  key: rpc-addr
+            - name: DAEMON_RPC_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: bitcoind
+                  key: rpc-user
+            - name: DAEMON_RPC_PASS
               valueFrom:
                 secretKeyRef:
                   name: bcoin
-                  key: bcoin-url
+                  key: http-api-key
             - name: JSON_RPC_IMPORT
               value: 'true'
             - name: DB_DIR
